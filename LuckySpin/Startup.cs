@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LuckySpin
@@ -15,13 +9,24 @@ namespace LuckySpin
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ILuckySpin, Lucky7>();
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            //TODO: Include the UseRouting and UseEndpoints Middleware to map the Controller Route (see slides)
+            app.UseRouting();
+            app.UseEndpoints(endpoints => {
+                // Added range constraint to the route, although, 
+                // this has no effect if the route is like 
+                // localhost:#####/?luck=100;
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action}/{luck:int:range(1,9)?}",
+                    defaults: new { controller = "Spinner", action = "Index" }
+                );
+            });
         }
     }
 }
