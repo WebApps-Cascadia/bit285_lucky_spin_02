@@ -1,14 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using LuckySpin;
+using Microsoft.AspNetCore.Mvc;
 
-// TODO: edit the Index Action to return the Lucky7 class output as "new ContentResult" rather than a view
-namespace LuckySpin.Controllers
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace Lucky_Spin_02
 {
     public class SpinnerController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index(int luck)
         {
-            return View();
+            return new ContentResult {Content = new Lucky7().Output(luck), ContentType = "text/html"};
         }
     }
 }
